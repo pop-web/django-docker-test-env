@@ -16,7 +16,7 @@
 
 2. クローンしたディレクトリに移動します：
     ```
-    cd yourrepository
+    cd django-docker-test-env
     ```
 
 3. `.env.local`ファイルを作成し、以下のように環境変数を設定します（適宜値を変更してください）：
