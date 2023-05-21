@@ -1,17 +1,17 @@
-version: '3'
+version: '3' # Docker Composeのバージョン指定
 
 services:
-  db:
-    image: postgres
-    platform: linux/amd64
-    environment:
-      - POSTGRES_PASSWORD=password
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+  db: # サービス名
+    image: postgres # 使用するイメージ
+    platform: linux/amd64 # 実行するプラットフォーム
+    environment: 
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD} # 環境変数を指定
+  web: # サービス名
+    build: . # Dockerfileの位置（現在のディレクトリを指定）
+    command: python manage.py runserver 0.0.0.0:8000 # コンテナ起動時に実行するコマンド
     volumes:
-      - .:/code
+      - .:/code # ホストとコンテナの間でディレクトリを共有
     ports:
-      - "8000:8000"
+      - "8000:8000" # ホストとコンテナのポートをマッピング
     depends_on:
-      - db
+      - db # dbサービスに依存
