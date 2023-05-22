@@ -4,11 +4,11 @@ services:
   db: # サービス名
     image: postgres # 使用するイメージ
     platform: linux/amd64 # 実行するプラットフォーム
-    environment: 
+    environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD} # 環境変数を指定
   web: # サービス名
     build: . # Dockerfileの位置（現在のディレクトリを指定）
-    command: python manage.py runserver 0.0.0.0:8000 # コンテナ起動時に実行するコマンド
+    command: poetry run python manage.py runserver 0.0.0.0:8000 # コンテナ起動時に実行するコマンド
     volumes:
       - .:/code # ホストとコンテナの間でディレクトリを共有
     ports:

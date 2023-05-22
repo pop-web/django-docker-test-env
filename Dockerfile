@@ -1,20 +1,25 @@
-# 使用する基本イメージ
+# ベースイメージとしてpython:3.9を使用
 FROM python:3.9
 
-# バッファリングされたstdoutとstderr出力を強制的にフラッシュすることで、Dockerログに即時出力させる
+# 環境変数の設定
 ENV PYTHONUNBUFFERED 1
+ENV POETRY_VERSION=1.5.0
 
 # コードを配置するディレクトリを作成
 RUN mkdir /code
 
-# 作業ディレクトリを指定
+# 作業ディレクトリの設定
 WORKDIR /code
 
-# requirements.txtを/code/ディレクトリにコピー
-COPY requirements.txt /code/
+# Poetryのインストール
+RUN pip install "poetry==$POETRY_VERSION"
 
-# requirements.txtに記載されたパッケージをインストール
-RUN pip install -r requirements.txt
+# pyproject.tomlとpoetry.lockファイルをコピー
+COPY pyproject.toml poetry.lock /code/
 
-# ローカルのファイルを/code/ディレクトリにコピー
+# 依存関係のインストール
+RUN poetry config virtualenvs.create false \
+  && poetry install --no-interaction --no-ansi
+
+# アプリケーションのソースコードをコピー
 COPY . /code/
