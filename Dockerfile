@@ -1,5 +1,5 @@
 # ベースイメージとしてpython:3.9を使用
-FROM python:3.9
+FROM python:3.8
 
 # 環境変数の設定
 ENV PYTHONUNBUFFERED 1
