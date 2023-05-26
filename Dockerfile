@@ -2,7 +2,7 @@
 FROM python:3.8
 
 # 環境変数の設定
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 ENV POETRY_VERSION=1.5.0
 
 # コードを配置するディレクトリを作成
