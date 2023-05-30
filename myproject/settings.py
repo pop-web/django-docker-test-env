@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-from decouple import config
+from decouple import Csv, config
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
@@ -30,8 +30,7 @@ SECRET_KEY = "django-insecure-fx#0gl_lgaj@tv%e^lk_+8ocl#i%q_2@k-57b53-w_az=gbwzf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 # Application definition
 
@@ -82,11 +81,11 @@ WSGI_APPLICATION = "myproject.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": config("POSTGRES_PASSWORD"),
-        "HOST": "db",
-        "PORT": 5432,
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": "db",  # Docker Composeで指定したデータベースのサービス名
+        "PORT": "5432",
     }
 }
 
