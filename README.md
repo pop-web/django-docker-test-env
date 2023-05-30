@@ -19,9 +19,11 @@
     cd django-docker-test-env
     ```
 
-3. `.env.local`ファイルを作成し、以下のように環境変数を設定します（適宜値を変更してください）：
+3. `.env`ファイルを作成し、以下のように環境変数を設定します（適宜値を変更してください）：
     ```
-    POSTGRES_PASSWORD=mysecretpassword
+    DB_NAME=postgres
+    DB_USER=postgres
+    DB_PASSWORD=password
     ```
 
 ## 開始方法
