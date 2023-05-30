@@ -29,10 +29,11 @@
 Docker Composeを使用してアプリケーションとデータベースを起動します：
 
 ```
+docker-compose build
 docker-compose up
 ```
 
-その後、ブラウザで`http://localhost:8000/`にアクセスしてDjangoアプリケーションを確認できます。
+その後、ブラウザで`http://localhost:8000/myapp`にアクセスしてDjangoアプリケーションを確認できます。
 
 ## 注意
 
