@@ -5,7 +5,13 @@ services:
     image: postgres # 使用するイメージ
     platform: linux/amd64 # 実行するプラットフォーム
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD} # 環境変数を指定
+      - POSTGRES_DB=${DB_NAME} # 環境変数を指定
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"  # ホストの5432ポートをコンテナの5432ポートにマッピング
+    volumes:
+      - ./data/db:/var/lib/postgresql/data  # ホストのディレクトリとコンテナのディレクトリをマッピング
   web: # サービス名
     build: . # Dockerfileの位置（現在のディレクトリを指定）
     command: poetry run python manage.py runserver 0.0.0.0:8000 # コンテナ起動時に実行するコマンド
