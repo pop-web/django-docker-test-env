@@ -1,4 +1,4 @@
-# ベースイメージとしてpython:3.9を使用
+# ベースイメージとしてpython:3.8を使用
 FROM python:3.8
 
 # 環境変数の設定
@@ -25,6 +25,5 @@ RUN pip install gunicorn
 # アプリケーションのソースコードをコピー
 COPY . /code/
 
-# マイグレーションとGunicornを使用してアプリケーションを起動
-CMD python manage.py migrate && exec gunicorn --bind :$PORT --workers 1 --threads 8 myproject.wsgi:application
-
+# Gunicornを使用してアプリケーションを起動
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 myproject.wsgi:application
