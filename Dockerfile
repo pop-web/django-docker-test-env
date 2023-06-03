@@ -22,8 +22,12 @@ RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 RUN pip install gunicorn
 
+# "wait-for-it"スクリプトをコピー
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
 # アプリケーションのソースコードをコピー
 COPY . /code/
 
-# Gunicornを使用してアプリケーションを起動
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 myproject.wsgi:application
+# Gunicornを使用してアプリケーションを起動するコマンドを変更
+CMD exec /wait-for-it.sh db:5432 -- gunicorn --bind :$PORT --workers 1 --threads 8 myproject.wsgi:application

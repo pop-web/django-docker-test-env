@@ -11,13 +11,14 @@ services:
     ports:
       - "5432:5432"  # ホストの5432ポートをコンテナの5432ポートにマッピング
     volumes:
-      - ./data/db:/var/lib/postgresql/data  # ホストのディレクトリとコンテナのディレクトリをマッピング
+      - ./data/db:/var/lib/postgresql/data # ホストのディレクトリとコンテナのディレクトリをマッピング
   web: # サービス名
     build: . # Dockerfileの位置（現在のディレクトリを指定）
-    command: poetry run python manage.py runserver 0.0.0.0:8000 # コンテナ起動時に実行するコマンド
     volumes:
-      - .:/code # ホストとコンテナの間でディレクトリを共有
+      - .:/code
     ports:
-      - "8000:8000" # ホストとコンテナのポートをマッピング
+      - "8000:8000"
     depends_on:
-      - db # dbサービスに依存
+      - db
+    environment:
+      - PORT=8000
