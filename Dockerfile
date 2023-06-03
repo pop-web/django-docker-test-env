@@ -25,5 +25,5 @@ RUN pip install gunicorn
 # アプリケーションのソースコードをコピー
 COPY . /code/
 
-# マイグレーションの実行 & Gunicornを使用してアプリケーションを起動
-CMD sh -c "python manage.py migrate && exec gunicorn --bind :$PORT --workers 1 --threads 8 myproject.wsgi:application"
+# Gunicornを使用してアプリケーションを起動
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 myproject.wsgi:application
