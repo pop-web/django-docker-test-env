@@ -15,10 +15,10 @@ services:
   web: # サービス名
     build: . # Dockerfileの位置（現在のディレクトリを指定）
     volumes:
-      - .:/code
+      - .:/code # ホストとコンテナの間でディレクトリを共有
     ports:
-      - "8000:8000"
+      - "8000:8000" # ホストとコンテナのポートをマッピング
     depends_on:
-      - db
+      - db # dbサービスに依存
     environment:
       - PORT=8000
