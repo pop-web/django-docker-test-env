@@ -1,0 +1,39 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: django-project-387815
+  SERVICE_NAME: django-project
+  IMAGE: my-image
+  REGION: asia-northeast1
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@main
+        with:
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker
+
+      - name: Build
+        run: docker build --platform linux/amd64 -f Dockerfile.prod -t gcr.io/$PROJECT_ID/$IMAGE .
+
+      - name: Push
+        run: docker push gcr.io/$PROJECT_ID/$IMAGE
+
+      - name: Deploy
+        run: gcloud run deploy $SERVICE_NAME --image gcr.io/$PROJECT_ID/$IMAGE --platform managed --region $REGION --allow-unauthenticated
