@@ -6,10 +6,10 @@ on:
       - main
 
 env:
-  PROJECT_ID: django-project-389317
-  SERVICE_NAME: django-project
-  IMAGE: my-image
-  REGION: asia-northeast1
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
+  IMAGE: ${{ secrets.GCP_IMAGE }}
+  REGION: ${{ secrets.GCP_REGION }}
   TAG: latest
 
 jobs:
