@@ -10,22 +10,22 @@ Djangoを使用した開発を始めるにあたり、Dockerで開発環境と�
 ## 環境設定手順
 
 1. まず、このリポジトリをクローンします：
-    ```
-    git clone git@github.com:pop-web/django-docker-test-env.git
-    ```
+```sh
+git clone git@github.com:pop-web/django-docker-test-env.git
+```
 
 2. クローンしたディレクトリに移動します：
-    ```
-    cd django-docker-test-env
-    ```
+```sh
+cd django-docker-test-env
+```
 
 3. ルートディレクトリに`.env`ファイルを作成し、以下の環境変数を設定します（必要に応じて値を変更してください）：
-    ```
-    DB_NAME=postgres
-    DB_USER=postgres
-    DB_PASSWORD=password
-    ALLOWED_HOSTS=localhost,127.0.0.1
-    ```
+```
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=password
+ALLOWED_HOSTS=localhost,127.0.0.1
+```
 
 ## アプリケーションの起動方法
 
@@ -42,16 +42,146 @@ Dockerfile.prod
 docker-compose.prod.yml
 ```
 
-### 開発環境の起動
+### ビルド
+```sh
+docker-compose -f docker-compose.dev.yml build
+```
+
+### プロジェクトの作成
+
+プロジェクトを作成します。
+```sh
+docker-compose -f docker-compose.dev.yml run --rm web sh -c "django-admin startproject myproject ."
+```
+
+### アプリの作成
+```sh
+docker-compose -f docker-compose.dev.yml  run --rm web sh -c "python manage.py startapp myapp"
+```
+
+
+### settings.pyの編集
+
+プロジェクトディレクトリ（myproject）の`settings.py`を編集していきます。
+
+import周辺を以下のように変更します。
+
+- 変更前
+```py
+from pathlib import Path
+```
+- 変更後
+```py
+import os
+from pathlib import Path
+from decouple import Csv, config
+
+DEBUG = config("DEBUG", default=False, cast=bool)
+```
+
+ALLOWED_HOSTSを以下のように変更します。
+```py
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
+```
+
+INSTALLED_APPSに`myapp`を追加します。
+```py
+INSTALLED_APPS = [
+    "myapp",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+]
+```
+
+`DATABASES`を以下ように変更します。
+```py
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": "db",  # Docker Composeで指定したデータベースのサービス名
+        "PORT": "5432",
+    }
+}
+```
+
+### 起動
 
 Docker Composeを使用して開発環境のアプリケーションとデータベースを起動します：
-
-```
-docker-compose -f docker-compose.dev.yml build
+```sh
 docker-compose -f docker-compose.dev.yml up
 ```
 
-これらのコマンドを実行した後、ブラウザで`http://localhost:8000/myapp/hello/`にアクセスすると、Djangoアプリケーションが表示されます。
+コマンドを実行した後、ブラウザで`http://localhost:8000/`にアクセスすると、Djangoアプリケーションが表示されます。
+
+
+### Hello Worldのページ作成
+
+Hello Worldと表示させるページを新規作成します。
+
+プロジェクトディレクトリ（myproject）の`urls.py`を新たに作成します。
+```py
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("myapp/", include("myapp.urls")),
+]
+```
+
+アプリディレクトリ（myapp）の`urls.py`へ`hello/`のパスを追加します。
+```py
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path("hello/", views.hello_world, name="hello_world"),
+]
+```
+
+アプリディレクトリ（myapp）の`views.py`を変更します。
+```py
+from django.shortcuts import render
+
+
+def hello_world(request):
+    return render(request, "myapp/hello_world.html", {"message": "Hello, World!"})
+```
+
+最後に、`myapp`へ以下のテンプレートを追加します
+`myapp/templates/myapp/hello_world.html`
+
+ファイルの内容は以下
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello, World!</title>
+</head>
+<body>
+    <h1>{{ message }}</h1>
+</body>
+</html>
+```
+
+
+「control + c」で一度止めて、再スタートさせます。
+```sh
+docker-compose -f docker-compose.dev.yml up
+```
+
+以下のパスをブラウザで確認すると「Hello, World!」と表示されます。
+```
+http://localhost:8000/myapp/hello/
+```
 
 ## Cloud Runへデプロイ
 
