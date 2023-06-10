@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: django-project-387815
+  PROJECT_ID: django-project-389317
   SERVICE_NAME: django-project
   IMAGE: my-image
   REGION: asia-northeast1
