@@ -10,7 +10,7 @@ env:
   SERVICE_NAME: django-project
   IMAGE: my-image
   REGION: asia-northeast1
-  TAG: tag
+  TAG: latest
 
 jobs:
   setup-build-publish-deploy:
@@ -27,7 +27,7 @@ jobs:
           credentials_json: "${{ secrets.GCLOUD_AUTH }}"
 
       - name: Configure Docker
-        run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+        run: gcloud auth configure-docker --quiet
 
       - name: Build
         run: docker build --platform linux/amd64 -f Dockerfile.prod -t asia-northeast1-docker.pkg.dev/$PROJECT_ID/$SERVICE_NAME/$IMAGE:$TAG .
