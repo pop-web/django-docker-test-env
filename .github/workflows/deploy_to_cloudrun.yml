@@ -10,6 +10,7 @@ env:
   SERVICE_NAME: django-project
   IMAGE: my-image
   REGION: asia-northeast1
+  TAG: latest # タグを設定してください
 
 jobs:
   setup-build-publish-deploy:
@@ -27,13 +28,13 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
 
       - name: Configure Docker
-        run: gcloud auth configure-docker
+        run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 
       - name: Build
-        run: docker build --platform linux/amd64 -f Dockerfile.prod -t gcr.io/$PROJECT_ID/$IMAGE .
+        run: docker build --platform linux/amd64 -f Dockerfile.prod -t asia-northeast1-docker.pkg.dev/$PROJECT_ID/$SERVICE_NAME/$IMAGE:$TAG .
 
       - name: Push
-        run: docker push gcr.io/$PROJECT_ID/$IMAGE
+        run: docker push asia-northeast1-docker.pkg.dev/$PROJECT_ID/$SERVICE_NAME/$IMAGE:$TAG
 
       - name: Deploy
-        run: gcloud run deploy $SERVICE_NAME --image gcr.io/$PROJECT_ID/$IMAGE --platform managed --region $REGION --allow-unauthenticated
+        run: gcloud run deploy $SERVICE_NAME --image asia-northeast1-docker.pkg.dev/$PROJECT_ID/$SERVICE_NAME/$IMAGE:$TAG --platform managed --region $REGION --allow-unauthenticated
