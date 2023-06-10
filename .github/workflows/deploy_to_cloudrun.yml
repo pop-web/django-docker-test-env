@@ -10,7 +10,7 @@ env:
   SERVICE_NAME: django-project
   IMAGE: my-image
   REGION: asia-northeast1
-  TAG: tag
+  TAG: latest
 
 jobs:
   setup-build-publish-deploy:
