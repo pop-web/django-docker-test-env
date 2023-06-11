@@ -7,7 +7,7 @@ Djangoを使用した開発を始めるにあたり、Dockerで開発環境と�
 - Dockerがインストールされていること
 - Docker Composeがインストールされていること
 
-## 環境設定手順
+## クローン
 
 1. まず、このリポジトリをクローンします：
 ```sh
@@ -27,9 +27,9 @@ DB_PASSWORD=password
 ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
-## アプリケーションの起動方法
+## 設定ファイルの説明
 
-開発環境と本番環境に対応した`Dockerfile`と`docker-compose.yml`を用意しました。
+開発環境と本番環境に対応した`Dockerfile`と`docker-compose.yml`を用意しています。
 
 開発環境用の設定ファイル
 ```
@@ -41,6 +41,10 @@ docker-compose.dev.yml
 Dockerfile.prod
 docker-compose.prod.yml
 ```
+
+## アプリケーションの起動方法
+
+アプリケーションの起動方法を説明します。
 
 ### ビルド
 ```sh
@@ -187,39 +191,35 @@ http://localhost:8000/myapp/hello/
 
 1. Google Cloud SDKのインストール
 
-    Google Cloud SDKをインストールすることで、コマンドラインからGoogle Cloudプロダクトを管理することが可能になります。インストールの手順は公式ドキュメントを参照してください。
+Google Cloud SDKをインストールすることで、コマンドラインからGoogle Cloudプロダクトを管理することが可能になります。インストールの手順は公式ドキュメントを参照してください。
 
 2. Google Cloud SDKの初期設定
 
-    インストール後、gcloud init コマンドを使ってGoogle Cloud SDKを初期化します。このコマンドを実行すると、ログインを求められます。ログインに成功すると、プロジェクトとデフォルトの設定リージョンを選択するように求められます。
-
-    ```
-    gcloud init
-    ```
+インストール後、gcloud init コマンドを使ってGoogle Cloud SDKを初期化します。このコマンドを実行すると、ログインを求められます。ログインに成功すると、プロジェクトとデフォルトの設定リージョンを選択するように求められます。
+```sh
+gcloud init
+```
 
 3. Dockerイメージのビルド
 
-    まず、Dockerfileが存在するディレクトリに移動します。次に、以下のコマンドを使ってDockerイメージをビルドします。ここではアプリケーション名として適切な名前を指定します。
-
-    ```
-    docker build --platform linux/amd64 -f Dockerfile.prod -t asia-northeast1-docker.pkg.dev/my-project-id/my-project/my-image:tag .
-    ```
+まず、Dockerfileが存在するディレクトリに移動します。次に、以下のコマンドを使ってDockerイメージをビルドします。ここではアプリケーション名として適切な名前を指定します。
+```sh
+docker build --platform linux/amd64 -f Dockerfile.prod -t asia-northeast1-docker.pkg.dev/my-project-id/my-project/my-image:tag .
+```
 
 4. Dockerイメージのプッシュ
 
-    Google Cloud SDKに含まれるDocker認証ヘルパーを使って、Google Artifact Registryにイメージをプッシュします。
-
-    ```
-    docker push asia-northeast1-docker.pkg.dev/my-project-id/my-project/my-image:tag
-    ```
+Google Cloud SDKに含まれるDocker認証ヘルパーを使って、Google Artifact Registryにイメージをプッシュします。
+```sh
+docker push asia-northeast1-docker.pkg.dev/my-project-id/my-project/my-image:tag
+```
 
 5. Cloud Runへのデプロイ
 
-    以下のコマンドを使って、Cloud Runにアプリケーションをデプロイします。
-
-    ```
-    gcloud run deploy django-project --image asia-northeast1-docker.pkg.dev/my-project-id/my-project/my-image:tag --platform managed --region asia-northeast1
-    ```
+以下のコマンドを使って、Cloud Runにアプリケーションをデプロイします。
+```sh
+gcloud run deploy django-project --image asia-northeast1-docker.pkg.dev/my-project-id/my-project/my-image:tag --platform managed --region asia-northeast1
+```
 6. GitHub Actionsでデプロイを自動化
 
 さらに、デプロイの自動化する場合は以下を参照して下さい。
