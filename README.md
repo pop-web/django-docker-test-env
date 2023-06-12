@@ -1,4 +1,3 @@
-hoge
 # DjangoとDockerを用いた開発環境の構築とCloud Runへのデプロイ
 
 Djangoを使用した開発を始めるにあたり、Dockerで開発環境と本番環境のセットアップを行いました。
