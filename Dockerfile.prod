@@ -30,5 +30,5 @@ RUN chmod +x /wait-for-it.sh
 COPY . /code/
 
 # Gunicornを使用してアプリケーションを起動するコマンドを変更
-CMD exec /wait-for-it.sh db:5432 -- gunicorn --bind :$PORT --workers 1 --threads 8 myproject.wsgi:application
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --log-level debug myproject.wsgi:application
 
